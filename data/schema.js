@@ -4,6 +4,7 @@ const agoloTypeDefinitions = `
     id: String
     roles: [String]
     stripe: Stripe
+    feeds: [Feed]
   }
 
   type Stripe {
@@ -66,14 +67,9 @@ const agoloTypeDefinitions = `
   type Cluster {
     id: String
     title: String
-    summary: Summary
-    articles: [Article]
-    source: [Source]
-  }
-
-  type Summary {
     summary: [SummarySection]
   }
+
 
   type SummarySection {
     sentences: [String]

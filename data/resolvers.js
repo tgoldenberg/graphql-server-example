@@ -3,14 +3,13 @@ import { Author, Post, View, Cluster, Feed, User, Article } from './connectors';
 const resolvers = {
   Query: {
     user(root, args) {
-      console.log('ARGS', args);
-      return User.findOne({ "emails.0.address": args.email }, 'emails stripe roles')
+      return User.findOne({ "emails.0.address": args.email })
         .then(user => {
-          console.log('USER',user)
           return {
             email: user.emails[0].address,
             roles: user.roles,
-            id: user._id
+            id: user._id,
+            stripe: user.stripe
           };
         });
     }
@@ -19,6 +18,16 @@ const resolvers = {
     stripe(user) {
       return user.stripe;
     },
+    feeds(user) {
+      // console.log('USER', user);
+      return Feed.find({ user_id: user.id, deleted: false })
+        .limit(1000)
+        .then(feeds => feeds.map(feed => ({
+          name: feed.name,
+          users: feed.users,
+          id: feed._id
+        })))
+    }
   },
   Stripe: {
     card(stripe){
@@ -39,33 +48,53 @@ const resolvers = {
   Feed: {
     users(feed) {
       return User.find({_id: { $in: feed.users.map(u => u.user_id)}})
+        .then(users => users.map(user => {
+          console.log('USER', user);
+          return ({
+            email: user.emails[0].address,
+            id: user._id,
+          });
+        }));
+    },
+    recentClusterCount(feed){
+      return Cluster.find({ feed_id: feed.id }).count();
     },
     recentClusters(feed) {
-      return Cluster.find({ feed_id: feed._id }, { limit: 100 })
+      return Cluster.find({ feed_id: feed.id })
+        .limit(3)
+        .sort({ last_updated_at: -1 })
+        .then(clusters => clusters.map(cluster => {
+          // console.log('CLUSTER', cluster);
+          return {
+            id: cluster._id,
+            title: cluster.title
+          };
+        }))
     },
     hotClusters(feed) {
-      return Cluster.find({ feed_id: feed._id }, { limit: 100 })
+      // console.log('FEED', feed.id);
+      return Cluster.find({ feed_id: feed.id })
+        .limit(3)
+        .then(clusters => clusters.map(cluster => {
+          console.log('CLUSTER', cluster);
+          return {
+            id: cluster._id,
+            title: cluster.title,
+            summary: cluster.summary
+          };
+        }))
     }
   },
   Cluster: {
     summary(cluster) {
+      console.log('CLUSTER', cluster);
       return cluster.summary;
-    },
-    articles(cluster) {
-      return Article.find({ _id: { $in: cluster.articles }});
-    },
-    source(cluster){
-      return cluster.source;
-    }
-  },
-  Summary: {
-    summary(summary){
-      return summary.summary;
     }
   },
   SummarySection: {
-    metadata(summarySection){
-      return summarySection.metadata;
+    metadata(section){
+      console.log('SECTION', section);
+      return section.metadata;
     }
   }
 };
