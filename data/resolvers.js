@@ -100,24 +100,3 @@ const resolvers = {
 };
 
 export default resolvers;
-
-// Query: {
-//   author(root, args) {
-//     let author = Author.findOne({ ...args });
-//     console.log('AUTHOR', author);
-//     return author;
-//   },
-// },
-// Author: {
-//   posts(author) {
-//     return Post.find({ authorId: author._id });
-//   },
-// },
-// Post: {
-//   author(post) {
-//     return Author.findOne({ _id: post.authorId });
-//   },
-//   views(post) {
-//     return View.findOne({ postId: post.id }).then((view) => view.views)
-//   }
-// },
