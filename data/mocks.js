@@ -10,7 +10,7 @@ const mocks = {
   }),
   User: () => ({
     email: casual.email,
-    _id: cuid(),
+    id: cuid(),
     roles: casual.array_of_words(3)
   }),
   Author: () => ({ firstName: casual.first_name, lastName: casual.last_name }),
@@ -20,12 +20,12 @@ const mocks = {
   }),
   Feed: () => ({
     name: casual.word,
-    _id: cuid(),
+    id: cuid(),
     recentClusterCount: casual.integer(0, 1000),
     unseenClusterCount: casual.integer(0, 500),
   }),
   Cluster: () => ({
-    _id: cuid(),
+    id: cuid(),
     title: casual.title
   }),
   SummarySection: () => ({
