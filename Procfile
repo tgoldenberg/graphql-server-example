@@ -1,1 +1,1 @@
-web: nodemon ./index.js
+server: babel-node ./index.js
