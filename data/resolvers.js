@@ -1,37 +1,57 @@
 import { User, Post, Comment } from './connectors';
 
 const resolvers = {
+  Mutation: {
+    submitPost(root, args){
+      let post = new Post({
+        title: args.title,
+        text: args.text,
+        userId: args.userId
+      });
+      console.log('POST', post);
+      post.save();
+      return post;
+    }
+  },
   Query: {
     user(root, args){
-      console.log('ARGS', args);
-      return User.findOne({ email: args.email }).then(user => {
-        if (!user) { return user; }
-        else {
-          return {
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            id: user._id
-          };
-        }
+      return User.findOne({ $or: [{ email: args.email},{ _id: args.id }]})
+        .then(user => {
+          if (!user) { return user; }
+          else {
+            return {
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              id: user._id
+            };
+          }
       })
     },
     users(root, args){
       return User.find({})
+        .limit(args.limit || 5)
         .then(users => {
           return users;
         })
     }
   },
   User: {
-    posts(user) {
-      console.log('USER', user);
-      return Post.find({ userId: user.id }).then(posts => posts);
+    posts(user, args) {
+      console.log('USER', user, args);
+      return Post.find({ userId: user.id })
+        .limit(args.limit || 10)
+        .then(posts => posts);
+    },
+    fullName(user) {
+      return `${user.firstName} ${user.lastName}`;
     }
   },
   Post: {
-    comments(post) {
-      return Comment.find({ postId: post.id }).then(comments => comments);
+    comments(post, args) {
+      return Comment.find({ postId: post.id })
+        .limit(args.limit || 10)
+        .then(comments => comments);
     },
     user(post) {
       return User.findOne({ _id: post.userId }).then(user => user);

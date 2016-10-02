@@ -245,8 +245,9 @@ const speakitTypeDefinitions = `
     email: String
     firstName: String
     lastName: String
+    fullName: String
     id: String
-    posts: [Post]
+    posts(limit: Int, from: Int): [Post]
   }
 
   type Post {
@@ -254,7 +255,7 @@ const speakitTypeDefinitions = `
     id: String
     title: String
     text: String
-    comments: [Comment]
+    comments(limit: Int, from: Int): [Comment]
     user: User
     createdAt: Int
   }
@@ -271,11 +272,16 @@ const speakitTypeDefinitions = `
 
   type Query {
     user(email: String, id: String): User
-    users: [User]
+    users(limit: Int): [User]
+  }
+
+  type Mutation {
+    submitPost(title: String!, text: String!, userId: String!): Post
   }
 
   schema {
     query: Query
+    mutation: Mutation
   }
 `;
 
