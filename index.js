@@ -6,7 +6,7 @@ import Mocks from './data/mocks';
 import bodyParser from 'body-parser';
 import Resolvers from './data/resolvers';
 import { makeExecutableSchema } from 'graphql-tools';
-const GRAPHQL_PORT = 80;
+const GRAPHQL_PORT = 8085;
 
 const executableSchema = makeExecutableSchema({
   typeDefs: schema,
@@ -38,16 +38,6 @@ app.use('/graphiql', graphiqlExpress({
     }
   }`
 }));
-
-// app.use('/graphql', apolloServer({
-//   graphiql: true,
-//   pretty: true,
-//   schema: [schema],
-//   // mocks: Mocks,
-//   resolvers: Resolvers,
-// }));
-
-// app.use('*', cors());
 
 app.listen(GRAPHQL_PORT, () => console.log(
   `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}/graphql`
