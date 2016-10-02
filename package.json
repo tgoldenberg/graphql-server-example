@@ -32,8 +32,10 @@
     "graphql-tools": "^0.4.2",
     "lodash": "^4.16.2",
     "mongoose": "^4.6.1",
+    "nodemon": "^1.10.2",
     "sequelize": "^3.24.3",
-    "sqlite": "^2.2.0"
+    "sqlite": "^2.2.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-cli": "6.5.1",
