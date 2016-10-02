@@ -2,13 +2,14 @@ import casual from 'casual';
 import _ from 'underscore';
 import Mongoose from 'mongoose';
 
+console.log('MONGO', process.env.MONGO_USERNAME, process.env.MONGO_PASSWORD, process.env.MONGO_URL);
 let options = {
-  user: 'tom',
-  pass: 'password'
+  user: process.env.MONGO_USERNAME,
+  pass: process.env.MONGO_PASSWORD
 };
 
-Mongoose.connect('mongodb://127.0.0.1:27017/test', options);
-
+Mongoose.connect(process.env.MONGO_URL, options);
+// Mongoose.connect('mongodb://127.0.0.1:27017/test', options);
 const db = Mongoose.connection;
 
 const UserSchema = new Mongoose.Schema({

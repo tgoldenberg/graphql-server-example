@@ -6,7 +6,7 @@ import Mocks from './data/mocks';
 import bodyParser from 'body-parser';
 import Resolvers from './data/resolvers';
 import { makeExecutableSchema } from 'graphql-tools';
-const GRAPHQL_PORT = 8080;
+const GRAPHQL_PORT = 8085;
 
 const executableSchema = makeExecutableSchema({
   typeDefs: schema,
